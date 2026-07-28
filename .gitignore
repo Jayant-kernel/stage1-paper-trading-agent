@@ -3,10 +3,13 @@
 .env.*
 !.env.example
 *.pem
+!security/research-signing-ed25519.pub.pem
 *.key
 *.p12
 *.pfx
 credentials/
+security/*.private.*
+security/*private*
 
 # Python
 .venv/
@@ -40,3 +43,10 @@ state/*
 # SDK and application logs
 *.log
 logs/
+
+# P0 development governance and generated provenance (never runtime evidence)
+.p0-inventory/
+docs/stage1_p0/inventory/
+docs/stage1_p0/patches/
+artifacts/provenance/
+*.change-card.sig
