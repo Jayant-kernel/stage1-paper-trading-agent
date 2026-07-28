@@ -1,0 +1,2 @@
+"""Outbound-only operational alerts."""
+

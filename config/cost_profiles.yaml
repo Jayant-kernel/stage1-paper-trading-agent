@@ -1,0 +1,19 @@
+version: nse_equity_intraday_2026-07-22
+verified_at: "2026-07-22"
+currency: INR
+profiles:
+  shoonya:
+    brokerage_rate: 0.0003
+    brokerage_cap_per_order: 5.0
+  zerodha:
+    brokerage_rate: 0.0003
+    brokerage_cap_per_order: 20.0
+statutory_charges:
+  stt_sell_rate: 0.00025
+  nse_transaction_rate: 0.0000307
+  sebi_turnover_rate: 0.000001
+  gst_rate: 0.18
+  stamp_duty_buy_rate: 0.00003
+sources:
+  zerodha: https://zerodha.com/charges/
+  shoonya: https://faq.shoonya.com/pricing/what-are-your-brokerage-and-other-charges/

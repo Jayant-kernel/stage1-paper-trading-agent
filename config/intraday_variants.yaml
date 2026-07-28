@@ -1,0 +1,61 @@
+protocol_version: intraday_variant_lab_v1
+test_window: SEALED
+sessions:
+  - session_date: "2026-07-20"
+    role: DEVELOPMENT
+    bar_artifact: data/derived/bars/date=2026-07-20/minute-bars-ec123064653ba34c.parquet
+    feature_artifact: data/derived/features/date=2026-07-20/market-features-5fe82ecd58d06493.parquet
+  - session_date: "2026-07-22"
+    role: VALIDATION
+    bar_artifact: data/derived/bars/date=2026-07-22/minute-bars-e6f366963999312b.parquet
+    feature_artifact: data/derived/features/date=2026-07-22/market-features-3b6198a0b7f11313.parquet
+artificial_delay_seconds: [0, 0.25, 1, 5, 15, 45]
+variants:
+  - id: baseline_v1
+    description: Frozen live baseline; comparison reference only.
+    entry_cutoff: "14:45:00"
+    max_spread_bps: 15
+    min_volume_z: 0.5
+    relative_momentum_bps: 10
+    long_rsi: [52, 72]
+    short_rsi: [28, 48]
+  - id: strict_momentum_v1
+    description: Requires stronger relative movement and volume confirmation.
+    entry_cutoff: "14:45:00"
+    max_spread_bps: 15
+    min_volume_z: 1.0
+    relative_momentum_bps: 20
+    long_rsi: [55, 68]
+    short_rsi: [32, 45]
+  - id: tight_spread_v1
+    description: Baseline signal restricted to lower estimated spread.
+    entry_cutoff: "14:45:00"
+    max_spread_bps: 8
+    min_volume_z: 0.5
+    relative_momentum_bps: 10
+    long_rsi: [52, 72]
+    short_rsi: [28, 48]
+  - id: early_only_v1
+    description: Baseline signal with entries ending at noon IST.
+    entry_cutoff: "12:00:00"
+    max_spread_bps: 15
+    min_volume_z: 0.5
+    relative_momentum_bps: 10
+    long_rsi: [52, 72]
+    short_rsi: [28, 48]
+  - id: no_volume_ablation_v1
+    description: Component ablation that removes volume confirmation.
+    entry_cutoff: "14:45:00"
+    max_spread_bps: 15
+    min_volume_z: -1000000
+    relative_momentum_bps: 10
+    long_rsi: [52, 72]
+    short_rsi: [28, 48]
+  - id: no_rsi_ablation_v1
+    description: Component ablation that removes the RSI band.
+    entry_cutoff: "14:45:00"
+    max_spread_bps: 15
+    min_volume_z: 0.5
+    relative_momentum_bps: 10
+    long_rsi: null
+    short_rsi: null

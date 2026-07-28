@@ -1,0 +1,42 @@
+# Secrets and local overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+
+# Editors and operating system
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store
+
+# Runtime state and local data (append-only records must never enter Git)
+data/raw/
+data/bars/
+data/decisions/
+data/reports/
+data/run_cards/
+data/historical/
+data/derived/
+data/evaluation/
+state/*
+!state/.gitkeep
+
+# SDK and application logs
+*.log
+logs/

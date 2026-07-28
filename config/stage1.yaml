@@ -1,0 +1,102 @@
+mode: paper
+timezone: Asia/Kolkata
+live_order_endpoints_enabled: false
+
+market:
+  open: "09:15:00"
+  candidate_start: "09:25:00"
+  new_entry_cutoff: "14:45:00"
+  flatten: "15:15:00"
+  shutdown: "15:35:00"
+
+data:
+  provider: fyers
+  bar_interval_seconds: 60
+  stale_tick_seconds: 6
+  reconnect_backoff_seconds: [1, 2, 5, 10, 30]
+  raw_tick_retention_days: 90
+  parquet_batch_size: 500
+  parquet_flush_seconds: 5
+
+universe:
+  symbols:
+    - NSE:RELIANCE-EQ
+    - NSE:TCS-EQ
+    - NSE:INFY-EQ
+    - NSE:HDFCBANK-EQ
+    - NSE:ICICIBANK-EQ
+    - NSE:SBIN-EQ
+    - NSE:BHARTIARTL-EQ
+    - NSE:LT-EQ
+    - NSE:AXISBANK-EQ
+    - NSE:ITC-EQ
+  context_symbols:
+    - NSE:NIFTY50-INDEX
+    - NSE:INDIAVIX-INDEX
+
+candidate_gate:
+  cadence_minutes: 3
+  max_candidates: 5
+  min_price: 100
+  max_estimated_spread_bps: 15
+  min_volume_z: 0.5
+  cooldown_minutes_after_decision: 15
+
+models:
+  local:
+    name: qwen3.5:9b
+    digest: sha256:be595b49fe22012bd1f5605ec14c7ffa58331783a88a4fd8c22e5fc8ec42cf9f
+    quantization: Q4_K_M
+    base_url: http://127.0.0.1:11434
+    context_tokens: 16384
+    temperature: 0.1
+    max_output_tokens: 600
+    timeout_seconds: 45
+  cloud_shadow:
+    enabled: false
+    max_batch_gates_per_day: 6
+    providers: [groq, cerebras, gemini]
+    timeout_seconds: 20
+
+paper:
+  starting_cash: 100000
+  max_open_positions: 2
+  max_round_trips_per_day: 2
+  risk_per_trade_fraction: 0.0025
+  max_daily_loss_fraction: 0.0075
+  max_position_fraction: 0.25
+  max_sector_positions: 1
+  cost_profiles: [shoonya, zerodha]
+  fill_deadline_seconds: 20
+  default_slippage_bps: 1.0
+  fallback_half_spread_bps: 1.0
+  tick_size: 0.05
+  stop_atr_multiple: 1.2
+  max_entry_move_atr: 0.25
+  unknown_depth_volume_fraction: 0.01
+
+news:
+  nse_poll_seconds: 60
+  sebi_rbi_poll_seconds: 300
+  gdelt_enabled: false
+  max_event_age_minutes: 120
+  max_items_per_symbol: 5
+
+alerts:
+  telegram_enabled: true
+  outbound_only: true
+
+operations:
+  runtime_code_read_only: true
+  halt_file: state/HALT_STAGE1
+  heartbeat_seconds: 2
+  watchdog_stale_seconds: 10
+  manifest_check_seconds: 60
+
+evaluation:
+  max_declared_variants: 12
+  sealed_window_single_open: true
+  require_component_ablations: true
+  artificial_delay_seconds: [0, 0.25, 1, 5, 15, 45]
+  memory_max_cases: 3
+  require_memory_eligible_before_cutoff: true

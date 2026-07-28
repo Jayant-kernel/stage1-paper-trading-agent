@@ -1,0 +1,15 @@
+protocol_version: draft-v1
+status: DRAFT_NOT_FROZEN
+max_declared_variants: 12
+partitions:
+  development: null
+  validation: null
+  sealed: null
+purge_days: null
+embargo_days: null
+sealed_window_single_open: true
+notes:
+  - Dates must be declared before strategy tuning begins.
+  - The sealed partition must be physically outside tuning-script allowlists.
+  - This draft is not permission to open or evaluate a sealed window.
+

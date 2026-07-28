@@ -1,0 +1,32 @@
+{
+  "chart": {
+    "error": null,
+    "result": [
+      {
+        "meta": {
+          "currency": "INR",
+          "exchangeName": "NSI",
+          "symbol": "SBIN.NS",
+          "timezone": "IST"
+        },
+        "timestamp": [1784519100, 1784605500],
+        "indicators": {
+          "quote": [
+            {
+              "open": [820.0, 825.0],
+              "high": [830.0, 834.0],
+              "low": [815.0, 821.0],
+              "close": [826.0, 831.0],
+              "volume": [15000000, 17500000]
+            }
+          ],
+          "adjclose": [
+            {
+              "adjclose": [826.0, 831.0]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

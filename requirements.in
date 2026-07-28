@@ -1,0 +1,44 @@
+# API and orchestration
+fyers-apiv3>=3.1.14,<3.2
+ollama
+langgraph
+
+# Typed data and deterministic computation
+pydantic>=2,<3
+PyYAML>=6
+polars
+numpy
+scipy
+scikit-learn
+
+# Local sentiment/model runtime
+transformers
+torch
+
+# Networking and scheduling
+httpx
+websockets
+feedparser
+beautifulsoup4
+tenacity
+apscheduler
+fastapi
+uvicorn
+python-telegram-bot
+
+# Storage and serialization
+duckdb
+pyarrow
+aiosqlite
+python-dotenv
+orjson
+structlog
+
+# Tests
+pytest
+pytest-asyncio
+freezegun
+
+# Reproducible environment tooling
+pip-tools
+wheel

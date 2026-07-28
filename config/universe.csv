@@ -1,0 +1,14 @@
+symbol,role,sector
+NSE:RELIANCE-EQ,trade,Energy
+NSE:TCS-EQ,trade,Information Technology
+NSE:INFY-EQ,trade,Information Technology
+NSE:HDFCBANK-EQ,trade,Financial Services
+NSE:ICICIBANK-EQ,trade,Financial Services
+NSE:SBIN-EQ,trade,Financial Services
+NSE:BHARTIARTL-EQ,trade,Telecommunication
+NSE:LT-EQ,trade,Construction
+NSE:AXISBANK-EQ,trade,Financial Services
+NSE:ITC-EQ,trade,Consumer Goods
+NSE:NIFTY50-INDEX,context,Market Index
+NSE:INDIAVIX-INDEX,context,Volatility Index
+
