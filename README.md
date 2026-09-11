@@ -12,6 +12,83 @@ The simplest way to explain it:
 > writes down why it would buy or reject a stock, practices the trade with fake
 > money, counts the real-world costs, and saves proof for every step.
 
+## Data Flow Diagram
+
+This is the high-level workflow of the project:
+
+```mermaid
+flowchart TD
+    A["Live market prices from FYERS"] --> B["Clean and normalize the data"]
+    B --> C["Build one-minute bars"]
+    C --> D["Create market features"]
+    D --> E["Candidate gate"]
+    E --> F{"Is this stock worth checking?"}
+    F -->|No| G["Reject it and save the reason"]
+    F -->|Yes| H["Create a frozen trade candidate"]
+    H --> I["Bull Bear Risk Tribunal"]
+    I --> J{"Final paper decision"}
+    J -->|Hold| K["Do not enter a trade"]
+    J -->|Allow long or short| L["Paper risk sizing"]
+    L --> M["Wait for the next real observable price"]
+    M --> N{"Is the entry still fair?"}
+    N -->|No| O["Reject missed or bad entry"]
+    N -->|Yes| P["Create a paper trade only"]
+    P --> Q["Track stop loss and flatten time"]
+    Q --> R["Exit the paper trade"]
+    R --> S["Calculate costs and final PnL"]
+    S --> T["Save proof for replay and review"]
+```
+
+In simple words:
+
+1. The system receives live market prices from FYERS.
+2. It cleans the data so bad, stale, or suspicious prices are not trusted.
+3. It builds one-minute market bars from the clean tick data.
+4. It calculates useful features like momentum, VWAP, RSI, volume strength,
+   spread, and market comparison.
+5. The candidate gate checks whether a stock is strong enough to consider.
+6. If the stock is weak or the data is bad, the system rejects it and saves the
+   reason.
+7. If the stock passes, the system creates a frozen paper-trade candidate.
+8. The Bull Bear Risk Tribunal reviews the candidate from three angles:
+   strength, weakness, and risk.
+9. The final decision is HOLD, ALLOW_LONG, or ALLOW_SHORT.
+10. If a trade is allowed, the system calculates paper position size using the
+    risk rules.
+11. It waits for the next real market price instead of pretending it entered at
+    an old price.
+12. If the entry is still fair, it creates a paper trade only.
+13. The trade exits on stop loss or before the market day ends.
+14. The final result is calculated after realistic Shoonya and Zerodha style
+    costs.
+15. Everything is saved so the same day can be checked and replayed later.
+
+The most important point:
+
+> The system does not jump directly from "stock is going up" to "buy." It moves
+> through data cleaning, strength checks, agent-style review, risk checks,
+> fair-entry checks, paper execution, cost calculation, and evidence saving.
+
+## How To Explain This Project
+
+Use this version when explaining the project to someone quickly:
+
+- This is a paper-only trading research system for selected NSE stocks.
+- It uses FYERS for live market data, but it cannot place real orders.
+- It looks for stocks that are stronger than the market, active enough, fresh,
+  and not too expensive to enter.
+- It rejects weak ideas and saves the reason instead of hiding failed signals.
+- A Bull Bear Risk Tribunal reviews each strong candidate before a paper trade
+  is allowed.
+- The system waits for the next real observable price, so it does not cheat by
+  using old prices.
+- It includes spread, slippage, and broker-style costs, because small trades can
+  look good before costs and bad after costs.
+- It limits daily trades, open positions, position size, and daily loss.
+- Every important decision is saved with proof so the day can be replayed later.
+- The main goal is not to prove that AI can trade. The main goal is to prove
+  whether a trading decision was fair, safe, and repeatable.
+
 ## What This Project Is
 
 This is a paper-trading research system.
@@ -389,83 +466,6 @@ Example:
 The system checks the same paper trade under both Shoonya-style and
 Zerodha-style costs. These are two cost views of the same simulated trade, not
 two separate accounts.
-
-## Data Flow Diagram
-
-This is the high-level workflow of the project:
-
-```mermaid
-flowchart TD
-    A["Live market prices from FYERS"] --> B["Clean and normalize the data"]
-    B --> C["Build one-minute bars"]
-    C --> D["Create market features"]
-    D --> E["Candidate gate"]
-    E --> F{"Is this stock worth checking?"}
-    F -->|No| G["Reject it and save the reason"]
-    F -->|Yes| H["Create a frozen trade candidate"]
-    H --> I["Bull Bear Risk Tribunal"]
-    I --> J{"Final paper decision"}
-    J -->|Hold| K["Do not enter a trade"]
-    J -->|Allow long or short| L["Paper risk sizing"]
-    L --> M["Wait for the next real observable price"]
-    M --> N{"Is the entry still fair?"}
-    N -->|No| O["Reject missed or bad entry"]
-    N -->|Yes| P["Create a paper trade only"]
-    P --> Q["Track stop loss and flatten time"]
-    Q --> R["Exit the paper trade"]
-    R --> S["Calculate costs and final PnL"]
-    S --> T["Save proof for replay and review"]
-```
-
-In simple words:
-
-1. The system receives live market prices from FYERS.
-2. It cleans the data so bad, stale, or suspicious prices are not trusted.
-3. It builds one-minute market bars from the clean tick data.
-4. It calculates useful features like momentum, VWAP, RSI, volume strength,
-   spread, and market comparison.
-5. The candidate gate checks whether a stock is strong enough to consider.
-6. If the stock is weak or the data is bad, the system rejects it and saves the
-   reason.
-7. If the stock passes, the system creates a frozen paper-trade candidate.
-8. The Bull Bear Risk Tribunal reviews the candidate from three angles:
-   strength, weakness, and risk.
-9. The final decision is HOLD, ALLOW_LONG, or ALLOW_SHORT.
-10. If a trade is allowed, the system calculates paper position size using the
-    risk rules.
-11. It waits for the next real market price instead of pretending it entered at
-    an old price.
-12. If the entry is still fair, it creates a paper trade only.
-13. The trade exits on stop loss or before the market day ends.
-14. The final result is calculated after realistic Shoonya and Zerodha style
-    costs.
-15. Everything is saved so the same day can be checked and replayed later.
-
-The most important point:
-
-> The system does not jump directly from "stock is going up" to "buy." It moves
-> through data cleaning, strength checks, agent-style review, risk checks,
-> fair-entry checks, paper execution, cost calculation, and evidence saving.
-
-## How To Explain This Project
-
-Use this version when explaining the project to someone quickly:
-
-- This is a paper-only trading research system for selected NSE stocks.
-- It uses FYERS for live market data, but it cannot place real orders.
-- It looks for stocks that are stronger than the market, active enough, fresh,
-  and not too expensive to enter.
-- It rejects weak ideas and saves the reason instead of hiding failed signals.
-- A Bull Bear Risk Tribunal reviews each strong candidate before a paper trade
-  is allowed.
-- The system waits for the next real observable price, so it does not cheat by
-  using old prices.
-- It includes spread, slippage, and broker-style costs, because small trades can
-  look good before costs and bad after costs.
-- It limits daily trades, open positions, position size, and daily loss.
-- Every important decision is saved with proof so the day can be replayed later.
-- The main goal is not to prove that AI can trade. The main goal is to prove
-  whether a trading decision was fair, safe, and repeatable.
 
 ## Tech Stack
 
