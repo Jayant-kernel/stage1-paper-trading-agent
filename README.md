@@ -14,7 +14,9 @@ The simplest way to explain it:
 
 ## Data Flow Diagram
 
-This is the high-level workflow of the project:
+This is the high-level workflow of the project. **Blue nodes are implemented
+Stage 1 paper-trading steps. Orange nodes show the planned Project X safety
+layer in a future broker-connected workflow.**
 
 ```mermaid
 flowchart TD
@@ -37,7 +39,38 @@ flowchart TD
     Q --> R["Exit the paper trade"]
     R --> S["Calculate costs and final PnL"]
     S --> T["Save proof for replay and review"]
+
+    J -.->|"Future approved execution intent"| X1
+
+    subgraph PROJECTX["Project X: planned execution-truth safety layer"]
+        X1["Project X starts: record approved trade intent"]
+        X2["Supported strategy or bot submits the broker order"]
+        X3["Broker and exchange return acknowledgement, fills and position state"]
+        X4["Reconcile trade intent with actual broker state"]
+        X5{"Mismatch, partial fill<br/>or stale broker state?"}
+        X6["State matches: verify the final broker state"]
+        X7["Pause supported new entries and alert the trader"]
+        X8["Trader reviews a supported recovery action<br/>(future and explicitly approved)"]
+        X9["Record the incident timeline and final verified state"]
+
+        X1 --> X2 --> X3 --> X4 --> X5
+        X5 -->|"No"| X6 --> X9
+        X5 -->|"Yes"| X7 --> X8 --> X9
+    end
+
+    classDef stageone fill:#0d47a1,stroke:#90caf9,color:#ffffff,stroke-width:2px;
+    classDef projectx fill:#7c2d12,stroke:#fdba74,color:#ffffff,stroke-width:3px;
+    class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T stageone;
+    class X1,X2,X3,X4,X5,X6,X7,X8,X9 projectx;
+    style PROJECTX fill:#3b1d0f,stroke:#fdba74,stroke-width:4px;
 ```
+
+**Where Project X starts and helps:** Project X begins when a strategy has an
+approved trade intent. It follows the order through broker acknowledgement,
+fills and final positions, then detects when the intended strategy does not
+match the broker-confirmed reality. The Project X branch is a future design
+only: this repository remains paper-only and cannot submit, pause or recover a
+real broker order.
 
 In simple words:
 
