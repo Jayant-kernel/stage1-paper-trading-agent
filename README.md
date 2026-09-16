@@ -43,34 +43,52 @@ flowchart TD
     J -.->|"Future approved execution intent"| X1
 
     subgraph PROJECTX["Project X: planned execution-truth safety layer"]
-        X1["Project X starts: record approved trade intent"]
-        X2["Supported strategy or bot submits the broker order"]
-        X3["Broker and exchange return acknowledgement, fills and position state"]
-        X4["Reconcile trade intent with actual broker state"]
-        X5{"Mismatch, partial fill<br/>or stale broker state?"}
-        X6["State matches: verify the final broker state"]
-        X7["Pause supported new entries and alert the trader"]
-        X8["Trader reviews a supported recovery action<br/>(future and explicitly approved)"]
-        X9["Record the incident timeline and final verified state"]
+        X1["Record bot trade intent"]
+        X2{"Deterministic safety policy<br/>passes?"}
+        X3["Reject or pause new entry<br/>and notify trader"]
+        X4["Project X sends approved order<br/>through supported broker adapter"]
+        X5["Broker and exchange return acknowledgement,<br/>fills, pending orders and positions"]
+        X6["Canonical order and position state"]
+        X7["Continuous health monitor"]
+        X8["Feed freshness, API health, margin,<br/>and broker-state age"]
+        X9{"Intent matches confirmed<br/>broker state?"}
+        X10["Continue monitoring while orders<br/>or positions remain active"]
+        X11["Pause supported new entries and<br/>alert trader with actual exposure"]
+        X12["Trader approves a supported recovery action<br/>(initial version: no automatic flattening)"]
+        X13["Broker executes recovery request"]
+        X14{"Final broker state verified?"}
+        X15["Record verified incident timeline"]
+        X16["Keep incident unresolved and escalate"]
+        X17["Existing positions or pending orders<br/>(including after restart/manual action)"]
 
-        X1 --> X2 --> X3 --> X4 --> X5
-        X5 -->|"No"| X6 --> X9
-        X5 -->|"Yes"| X7 --> X8 --> X9
+        X1 --> X2
+        X2 -->|"No"| X3
+        X2 -->|"Yes"| X4 --> X5 --> X6
+        X7 --> X8 --> X9
+        X6 --> X9
+        X17 --> X6
+        X9 -->|"Yes"| X10 --> X6
+        X9 -->|"No or stale"| X11 --> X12 --> X13 --> X14
+        X14 -->|"Yes"| X15
+        X14 -->|"No"| X16
     end
 
     classDef stageone fill:#0d47a1,stroke:#90caf9,color:#ffffff,stroke-width:2px;
     classDef projectx fill:#7c2d12,stroke:#fdba74,color:#ffffff,stroke-width:3px;
     class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T stageone;
-    class X1,X2,X3,X4,X5,X6,X7,X8,X9 projectx;
+    class X1,X2,X3,X4,X5,X6,X7,X8,X9,X10,X11,X12,X13,X14,X15,X16,X17 projectx;
     style PROJECTX fill:#3b1d0f,stroke:#fdba74,stroke-width:4px;
 ```
 
-**Where Project X starts and helps:** Project X begins when a strategy has an
-approved trade intent. It follows the order through broker acknowledgement,
-fills and final positions, then detects when the intended strategy does not
-match the broker-confirmed reality. The Project X branch is a future design
-only: this repository remains paper-only and cannot submit, pause or recover a
-real broker order.
+**Where Project X starts and helps:** In a future broker-connected system,
+Project X sits between the bot and the broker for any hard safety gate. It
+records the bot's intent before submission, applies deterministic policies, and
+continuously observes broker orders, fills, positions, margin, API health, and
+data freshness. It also checks existing positions and pending orders after a
+restart or manual action. The first version detects, pauses supported new
+entries, alerts the trader, and waits for explicit recovery approval; it does
+not automatically flatten positions. This repository remains paper-only and
+cannot submit, pause, or recover a real broker order.
 
 In simple words:
 
